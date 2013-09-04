@@ -1,0 +1,41 @@
+<project name="javapp" default="dist">
+	<target name="compile" depends="clean">
+		<mkdir dir="bin"/>
+		<javac
+			includeantruntime="false"
+			srcdir="src" destdir="bin"></javac>
+	</target>
+	<target name="dist" depends="compile">
+		<jar file="javapp.jar">
+			<fileset dir="bin">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+	<target name="test" depends="compile">
+		<echo message="Compiling Person"/>
+		<javac
+			debug="true" verbose="true"
+			includeantruntime="false"
+			srcdir="test" destdir="bin" includes="javapp/test/Person.java"></javac>
+		<echo message="Done"/>
+		<java classpath="bin" classname="javapp.JavaPPCommandLine">
+			<arg value="javapp.test"/><arg value="PP"/><arg value="test/javapp/test/PP.java"/>
+			<arg value="--class"/><arg value="javapp.test.Person"/>
+			<arg value="--collection"/><arg value="javapp.test.Person.brothers=java.lang.String"/>
+			<arg value="--collection"/><arg value="javapp.test.Person.foos=javapp.test.Person$Foo"/>
+			<arg value="--assocarray"/><arg value="javapp.test.Person.mappy=java.lang.String,javapp.test.Person$BornDate"/>
+			<arg value="--assocarray"/><arg value="javapp.test.Person.hashy=java.lang.String,javapp.test.Person$BornDate"/>
+			<arg value="--forcetostring"/><arg value="java.util.Date"/>
+			<arg value="--usestringbuilder"/><arg value="true"/>
+		</java>
+		<javac
+			includeantruntime="false"
+			srcdir="test" destdir="bin"></javac>
+		<java classpath="bin" classname="javapp.test.PPRun"></java>
+	</target>
+	<target name="clean">
+		<delete dir="bin"/>
+		<delete file="test/javapp/test/PP.java"/>
+	</target>
+</project>
